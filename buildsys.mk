@@ -23,65 +23,65 @@
 #  POSSIBILITY OF SUCH DAMAGE.
 #
 
-PACKAGE = @PACKAGE@
+PACKAGE = opensn0w
 AS = @AS@
-CC = @CC@
+CC = clang -std=gnu99
 CXX = @CXX@
-CPP = @CPP@
+CPP = clang -E
 DC = @DC@
 ERLC = @ERLC@
 OBJC = @OBJC@
 OBJCXX = @OBJCXX@
-AR = @AR@
+AR = /opt/local/bin/ar
 LD = ${CC}
-RANLIB = @RANLIB@
+RANLIB = /opt/local/bin/ranlib
 PYTHON = @PYTHON@
 ASFLAGS = @ASFLAGS@
-CFLAGS = @CFLAGS@
+CFLAGS = -g -O2
 CXXFLAGS = @CXXFLAGS@
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS = -g -O2  -std=gnu99 -Werror-implicit-function-declaration  -DPREFIX=\"${prefix}\" -DLOCALEDIR=\"${LOCALEDIR}\" -DMODDIR=\"${MODDIR}\" -DSHAREDIR=\"${prefix}\" -DSYSCONFDIR=\"${prefix}/etc\" -DLOGDIR=\"${prefix}/var\" -DRUNDIR=\"${prefix}/var\" -DDATADIR=\"${prefix}/etc\"
 DFLAGS = @DFLAGS@
 ERLCFLAGS = @ERLCFLAGS@
 OBJCFLAGS = @OBJCFLAGS@
 OBJCXXFLAGS = @OBJCXXFLAGS@
-LDFLAGS = @LDFLAGS@
-LDFLAGS_RPATH = @LDFLAGS_RPATH@
-LIBS = @LIBS@
+LDFLAGS = 
+LDFLAGS_RPATH = -Wl,-rpath,${libdir}
+LIBS = -lssl -lcrypto -lcurl -lreadline -lusb-1.0 -lpthread -ldl -lz  /Users/shmadul/opensn0w//prebuilt/libusb-1.0.a -framework IOKit -framework CoreFoundation 
 PYTHON_FLAGS = @PYTHON_FLAGS@
-PROG_IMPLIB_NEEDED = @PROG_IMPLIB_NEEDED@
-PROG_IMPLIB_LDFLAGS = @PROG_IMPLIB_LDFLAGS@
-PROG_SUFFIX = @EXEEXT@
-LIB_CFLAGS = @LIB_CFLAGS@
-LIB_LDFLAGS = @LIB_LDFLAGS@
-LIB_PREFIX = @LIB_PREFIX@
-LIB_SUFFIX = @LIB_SUFFIX@
-PLUGIN_CFLAGS = @PLUGIN_CFLAGS@
-PLUGIN_LDFLAGS = @PLUGIN_LDFLAGS@
-PLUGIN_SUFFIX = @PLUGIN_SUFFIX@
-INSTALL_LIB = @INSTALL_LIB@
-UNINSTALL_LIB = @UNINSTALL_LIB@
-CLEAN_LIB = @CLEAN_LIB@
-LN_S = @LN_S@
+PROG_IMPLIB_NEEDED = no
+PROG_IMPLIB_LDFLAGS = 
+PROG_SUFFIX = 
+LIB_CFLAGS = -fPIC
+LIB_LDFLAGS = -compatibility_version ${LIB_MAJOR}.${LIB_MINOR} -current_version ${LIB_MAJOR}.${LIB_MINOR} -install_name ${libdir}/${LIB} -dynamiclib -flat_namespace
+LIB_PREFIX = lib
+LIB_SUFFIX = .dylib
+PLUGIN_CFLAGS = -fPIC
+PLUGIN_LDFLAGS = -bundle -flat_namespace -undefined suppress
+PLUGIN_SUFFIX = .impl
+INSTALL_LIB = ${INSTALL} -m 755 $$i ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib && ${LN_S} -f $${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.dylib && ${LN_S} -f $${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib ${DESTDIR}${libdir}/$$i
+UNINSTALL_LIB = rm -f ${DESTDIR}${libdir}/$$i ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.dylib ${DESTDIR}${libdir}/$${i%.dylib}.${LIB_MAJOR}.${LIB_MINOR}.dylib
+CLEAN_LIB = 
+LN_S = ln -s
 MKDIR_P = mkdir -p
-INSTALL = @INSTALL@
-SHELL = @SHELL@
+INSTALL = /usr/local/bin/ginstall -c
+SHELL = /bin/sh
 MSGFMT = @MSGFMT@
 JAVAC = @JAVAC@
 JAVACFLAGS = @JAVACFLAGS@
 JAR = @JAR@
 WINDRES = @WINDRES@
-prefix = @prefix@
-exec_prefix = @exec_prefix@
-bindir = @bindir@
-libdir = @libdir@
+prefix = /opensn0w
+exec_prefix = ${prefix}
+bindir = ${exec_prefix}/bin
+libdir = ${exec_prefix}/lib
 plugindir ?= ${libdir}/${PACKAGE}
-datarootdir = @datarootdir@
-datadir = @datadir@
-includedir = @includedir@
+datarootdir = ${prefix}/share
+datadir = ${datarootdir}
+includedir = ${prefix}/include
 includesubdir ?= ${PACKAGE}
-localedir = @localedir@
+localedir = ${datarootdir}/locale
 localename ?= ${PACKAGE}
-mandir = @mandir@
+mandir = ${datarootdir}/man
 mansubdir ?= man1
 
 OBJS1 = ${SRCS:.c=.o}
@@ -664,27 +664,27 @@ distclean: clean
 		fi \
 	done
 
-DIR_ENTER = printf "@TERM_EL@@TERM_SETAF6@Entering directory @TERM_BOLD@$$i@TERM_SGR0@@TERM_SETAF6@.@TERM_SGR0@\n"; cd $$i || exit $$?
-DIR_LEAVE = printf "@TERM_EL@@TERM_SETAF6@Leaving directory @TERM_BOLD@$$i@TERM_SGR0@@TERM_SETAF6@.@TERM_SGR0@\n"; cd .. || exit $$?
-DEPEND_STATUS = printf "@TERM_EL@@TERM_SETAF3@Generating dependencies...@TERM_SGR0@\r"
-DEPEND_OK = printf "@TERM_EL@@TERM_SETAF2@Successfully generated dependencies.@TERM_SGR0@\n"
-DEPEND_FAILED = err=$$?; printf "@TERM_EL@@TERM_SETAF1@Failed to generate dependencies!@TERM_SGR0@\n"; exit $$err
-COMPILE_STATUS = printf "@TERM_EL@@TERM_SETAF3@Compiling @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF3@...@TERM_SGR0@\r"
-COMPILE_OK = printf "@TERM_EL@@TERM_SETAF2@Successfully compiled @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF2@.@TERM_SGR0@\n"
-COMPILE_FAILED = err=$$?; printf "@TERM_EL@@TERM_SETAF1@Failed to compile @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF1@!@TERM_SGR0@\n"; exit $$err
-COMPILE_LIB_STATUS = printf "@TERM_EL@@TERM_SETAF3@Compiling @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF3@ (lib)...@TERM_SGR0@\r"
-COMPILE_LIB_OK = printf "@TERM_EL@@TERM_SETAF2@Successfully compiled @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF2@ (lib).@TERM_SGR0@\n"
-COMPILE_LIB_FAILED = err=$$?; printf "@TERM_EL@@TERM_SETAF1@Failed to compile @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF1@ (lib)!@TERM_SGR0@\n"; exit $$err
-COMPILE_PLUGIN_STATUS = printf "@TERM_EL@@TERM_SETAF3@Compiling @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF3@ (plugin)...@TERM_SGR0@\r"
-COMPILE_PLUGIN_OK = printf "@TERM_EL@@TERM_SETAF2@Successfully compiled @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF2@ (plugin).@TERM_SGR0@\n"
-COMPILE_PLUGIN_FAILED = err=$$?; printf "@TERM_EL@@TERM_SETAF1@Failed to compile @TERM_BOLD@$<@TERM_SGR0@@TERM_SETAF1@ (plugin)!@TERM_SGR0@\n"; exit $$err
-LINK_STATUS = printf "@TERM_EL@@TERM_SETAF3@Linking @TERM_BOLD@$@@TERM_SGR0@@TERM_SETAF3@...@TERM_SGR0@\r"
-LINK_OK = printf "@TERM_EL@@TERM_SETAF2@Successfully linked @TERM_BOLD@$@@TERM_SGR0@@TERM_SETAF2@.@TERM_SGR0@\n"
-LINK_FAILED = err=$$?; printf "@TERM_EL@@TERM_SETAF1@Failed to link @TERM_BOLD@$@@TERM_SGR0@@TERM_SETAF1@!@TERM_SGR0@\n"; exit $$err
-INSTALL_STATUS = printf "@TERM_EL@@TERM_SETAF3@Installing @TERM_BOLD@$$i@TERM_SGR0@@TERM_SETAF3@...@TERM_SGR0@\r"
-INSTALL_OK = printf "@TERM_EL@@TERM_SETAF2@Successfully installed @TERM_BOLD@$$i@TERM_SGR0@@TERM_SETAF2@.@TERM_SGR0@\n"
-INSTALL_FAILED = err=$$?; printf "@TERM_EL@@TERM_SETAF1@Failed to install @TERM_BOLD@$$i@TERM_SGR0@@TERM_SETAF1@!@TERM_SGR0@\n"; exit $$err
-DELETE_OK = printf "@TERM_EL@@TERM_SETAF4@Deleted @TERM_BOLD@$$i@TERM_SGR0@@TERM_SETAF4@.@TERM_SGR0@\n"
-DELETE_FAILED = err=$$?; printf "@TERM_EL@@TERM_SETAF1@Failed to delete @TERM_BOLD@$$i@TERM_SGR0@@TERM_SETAF1@!@TERM_SGR0@\n"; exit $$err
+DIR_ENTER = printf "[K[36mEntering directory [1m$$i(B[m[36m.(B[m\n"; cd $$i || exit $$?
+DIR_LEAVE = printf "[K[36mLeaving directory [1m$$i(B[m[36m.(B[m\n"; cd .. || exit $$?
+DEPEND_STATUS = printf "[K[33mGenerating dependencies...(B[m\r"
+DEPEND_OK = printf "[K[32mSuccessfully generated dependencies.(B[m\n"
+DEPEND_FAILED = err=$$?; printf "[K[31mFailed to generate dependencies!(B[m\n"; exit $$err
+COMPILE_STATUS = printf "[K[33mCompiling [1m$<(B[m[33m...(B[m\r"
+COMPILE_OK = printf "[K[32mSuccessfully compiled [1m$<(B[m[32m.(B[m\n"
+COMPILE_FAILED = err=$$?; printf "[K[31mFailed to compile [1m$<(B[m[31m!(B[m\n"; exit $$err
+COMPILE_LIB_STATUS = printf "[K[33mCompiling [1m$<(B[m[33m (lib)...(B[m\r"
+COMPILE_LIB_OK = printf "[K[32mSuccessfully compiled [1m$<(B[m[32m (lib).(B[m\n"
+COMPILE_LIB_FAILED = err=$$?; printf "[K[31mFailed to compile [1m$<(B[m[31m (lib)!(B[m\n"; exit $$err
+COMPILE_PLUGIN_STATUS = printf "[K[33mCompiling [1m$<(B[m[33m (plugin)...(B[m\r"
+COMPILE_PLUGIN_OK = printf "[K[32mSuccessfully compiled [1m$<(B[m[32m (plugin).(B[m\n"
+COMPILE_PLUGIN_FAILED = err=$$?; printf "[K[31mFailed to compile [1m$<(B[m[31m (plugin)!(B[m\n"; exit $$err
+LINK_STATUS = printf "[K[33mLinking [1m$@(B[m[33m...(B[m\r"
+LINK_OK = printf "[K[32mSuccessfully linked [1m$@(B[m[32m.(B[m\n"
+LINK_FAILED = err=$$?; printf "[K[31mFailed to link [1m$@(B[m[31m!(B[m\n"; exit $$err
+INSTALL_STATUS = printf "[K[33mInstalling [1m$$i(B[m[33m...(B[m\r"
+INSTALL_OK = printf "[K[32mSuccessfully installed [1m$$i(B[m[32m.(B[m\n"
+INSTALL_FAILED = err=$$?; printf "[K[31mFailed to install [1m$$i(B[m[31m!(B[m\n"; exit $$err
+DELETE_OK = printf "[K[34mDeleted [1m$$i(B[m[34m.(B[m\n"
+DELETE_FAILED = err=$$?; printf "[K[31mFailed to delete [1m$$i(B[m[31m!(B[m\n"; exit $$err
 
 include .deps
