@@ -1,0 +1,16 @@
+# Copyright (c) Mason Dulemba (@shmadul) 2017
+# opensn0w easy Installer for iSalt
+#!/bin/bash    
+#
+echo patching opensn0w 
+patch -p1 < patch.diff
+echo Patched
+echo Running AutoGen
+chmod +x autogen.sh
+./autogen.sh
+echo Configuring (setting prefix to ~/opensn0w)
+./configure    --prefix=~/opensn0w
+echo making
+make
+echo making install
+sudo make install
